@@ -12,20 +12,10 @@ import {
   TouchableOpacity,
 } from "react-native";
 
-export default function DebtorCard(props, { navigation }) {
+export default function DebtsDetailsCard(props, { navigation }) {
   return (
     <View style={styles.card}>
-      <View style={styles.moneyWrapper}>
-        <View style={styles.moneyCard}>
-          <Text>Rs.</Text>
-          <Text style={styles.moneyText}>{props.money}</Text>
-        </View>
-      </View>
-      <View style={styles.nameWrapper}>
-        <View style={styles.nameCard}>
-          <Text style={styles.nameText}>{props.name}</Text>
-        </View>
-      </View>
+      
     </View>
   );
 }
@@ -35,7 +25,7 @@ const styles = StyleSheet.create({
     // flex: 0.5,
     height: 90,
     width: 350,
-    backgroundColor: "#FAF8F1",
+    backgroundColor: "#fff",
     flexDirection: "row",
     marginBottom: 10,
     borderRadius: 10,
