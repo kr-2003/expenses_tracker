@@ -1,3 +1,4 @@
+import React from "react";
 import {
   StyleSheet,
   Text,
@@ -75,6 +76,7 @@ export default function AddDebt({ navigation }) {
     <View style={styles.container}>
       <View style={styles.tasksWrapper}>
         <Text style={styles.sectionTitle}>Add Debt</Text>
+
         {/* <View>
           <Text>Enter the Amount: </Text>
           <TextInput
