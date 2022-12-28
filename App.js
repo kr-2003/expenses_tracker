@@ -20,9 +20,10 @@ import DebtScreen from "./Screens/DebtScreen";
 import DebtorCard from "./components/DebtorCard";
 import Login from "./Screens/Login";
 import Register from "./Screens/Register";
-import AddDebt from "./Screens/AddDebt";
 import Dashboard from "./Screens/Dashboard";
+import DebtorDetail from "./Screens/DebtorDetail";
 import auth from "@react-native-firebase/auth";
+import AddDebt from "./Screens/AddDebt";
 import React, { useEffect, useState, createContext } from "react";
 
 const Stack = createNativeStackNavigator();
@@ -68,6 +69,11 @@ export default function App() {
     <MyContext.Provider value={{ user }}>
       <NavigationContainer>
         <Stack.Navigator>
+          {/* <Stack.Screen
+            options={{ headerShown: false }}
+            name="AddDebt"
+            component={AddDebt}
+          /> */}
           <Stack.Screen
             options={{ headerShown: false }}
             name="Dashboard"
@@ -82,6 +88,16 @@ export default function App() {
             options={{ headerShown: false }}
             name="AddDebt"
             component={AddDebt}
+          />
+          <Stack.Screen
+            options={{ headerShown: false }}
+            name="DebtorDetail"
+            component={DebtorDetail}
+          />
+          <Stack.Screen
+            options={{ headerShown: false }}
+            name="DebtorCard"
+            component={DebtorCard}
           />
         </Stack.Navigator>
       </NavigationContainer>

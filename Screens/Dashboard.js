@@ -66,9 +66,18 @@ export default function Dashboard({ navigation }) {
         </View>
       </View>
       <View style={styles.menus}>
-        <View style={styles.menuCard}></View>
-        <View style={styles.menuCard}></View>
-        <View style={styles.menuCard}></View>
+        <TouchableOpacity style={styles.menuCard}>
+          <Text>Your Expenditures</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={styles.menuCard}
+          onPress={() => navigation.navigate("Debt")}
+        >
+          <Text>Vasooli</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.menuCard}>
+          <Text>Udhaari</Text>
+        </TouchableOpacity>
       </View>
     </View>
   );
@@ -77,6 +86,7 @@ export default function Dashboard({ navigation }) {
 const styles = StyleSheet.create({
   container: {
     paddingHorizontal: 20,
+    paddingTop: 20,
   },
   headingWrapper: {},
   profile: {
@@ -122,5 +132,7 @@ const styles = StyleSheet.create({
     borderWidth: 0.2,
     borderRadius: 10,
     marginBottom: 10,
-  }
+    justifyContent: "center",
+    paddingLeft: 20,
+  },
 });

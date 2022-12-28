@@ -17,41 +17,66 @@ import {
 } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-
+import firestore from "@react-native-firebase/firestore";
 import InputCard from "../components/InputCard";
 import AmtInputCard from "../components/AmtInputCard";
+import { MyContext } from "../App";
+import React, { useContext } from "react";
 
 export default function AddDebt({ navigation }) {
-  const [Amt, onChangeAmt] = React.useState(null);
-  const inputAmt=<TextInput
-                    style={styles.input}
-                    onChangeText={onChangeAmt}
-                    value={Amt}
-                    placeholder="0.00"
-                    keyboardType="numeric"
-                  />
+  const [Amt, onChangeAmt] = React.useState(0);
   const [name, onChangeName] = React.useState(null);
-  const inputName=<TextInput
-                    style={styles.input}
-                    onChangeText={onChangeName}
-                    value={name}
-                    placeholder="Rohit"
-                    keyboardType="text"
-                  />
   const [details, onChangeDetails] = React.useState(null);
-  const inputDetails=<TextInput
-                    multiline
-                    numberOfLines={4}
-                    style={styles.input}
-                    onChangeText={onChangeDetails}
-                    value={details}
-                    placeholder="Enter Details Here..."
-                    keyboardType="text"
-                  />
+  const { user } = useContext(MyContext);
+  const handleSubmit = async () => {
+    await firestore()
+      .collection("debts")
+      .doc(user.uid)
+      .update({
+        allDebts: firestore.FieldValue.arrayUnion({
+          name: name.toLowerCase(),
+          amount: Number(Amt),
+          description: details,
+        }),
+      });
+    navigation.goBack();
+  };
+  const inputAmt = (
+    <TextInput
+      style={styles.input}
+      onChangeText={onChangeAmt}
+      value={Amt}
+      placeholder="0.00"
+      keyboardType="numeric"
+    />
+  );
+
+  const inputName = (
+    <TextInput
+      style={styles.input}
+      onChangeText={onChangeName}
+      value={name}
+      placeholder="Rohit"
+      keyboardType="text"
+    />
+  );
+
+  const inputDetails = (
+    <TextInput
+      multiline
+      numberOfLines={4}
+      style={styles.input}
+      onChangeText={onChangeDetails}
+      value={details}
+      placeholder="Enter Details Here..."
+      keyboardType="text"
+    />
+  );
   return (
     <View style={styles.container}>
       <View style={styles.tasksWrapper}>
-        <Text style={styles.sectionTitle}>ENTRY FORM</Text>
+        <Text style={styles.sectionTitle}>Add Debt</Text>
+
         {/* <View>
           <Text>Enter the Amount: </Text>
           <TextInput
@@ -62,12 +87,26 @@ export default function AddDebt({ navigation }) {
             keyboardType="numeric"
           />
         </View> */}
-        <InputCard name= "Borrower's Name: " content={inputName} type={1}></InputCard>
-        <AmtInputCard name="Enter the Amount: " content={inputAmt} extraContent={<Text>Rs. </Text>}></AmtInputCard>
-        <InputCard name= "Details: " content={inputDetails} type={2}></InputCard>
-        <View style={{flexDirection: "row",justifyContent: "space-evenly",alignItems: "center"}}>
+        <InputCard
+          name="Borrower's Name: "
+          content={inputName}
+          type={1}
+        ></InputCard>
+        <AmtInputCard
+          name="Enter the Amount: "
+          content={inputAmt}
+          extraContent={<Text>Rs. </Text>}
+        ></AmtInputCard>
+        <InputCard name="Details: " content={inputDetails} type={2}></InputCard>
+        <View
+          style={{
+            flexDirection: "row",
+            justifyContent: "space-evenly",
+            alignItems: "center",
+          }}
+        >
           <View style={styles.addButton}>
-            <TouchableOpacity onPress={() => navigation.goBack()}>
+            <TouchableOpacity onPress={handleSubmit}>
               <Text style={{ fontWeight: "bold", color: "black" }}>Submit</Text>
             </TouchableOpacity>
           </View>
@@ -119,7 +158,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#D6E4E5",
   },
   input: {
-    justifyContent:"center",
-    alignItems:"center",
+    justifyContent: "center",
+    alignItems: "center",
   },
 });
