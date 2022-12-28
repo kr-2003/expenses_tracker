@@ -26,6 +26,14 @@ export default function DebtorDetail({ route, navigation }) {
   const { user } = useContext(MyContext);
   const [total, setTotal] = useState(0);
   const [brr, setBrr] = useState([{}]);
+  const deleteHandler = async (debt) => {
+    await firestore()
+      .collection("debts")
+      .doc(user.uid)
+      .update({ allDebts: firestore.FieldValue.arrayRemove(debt) })
+      .then((msg) => console.log(msg))
+      .catch((err) => console.log(err));
+  };
   useEffect(() => {
     const getAllDebts = async () => {
       const data = await firestore().collection("debts").doc(user.uid).get();
@@ -46,7 +54,8 @@ export default function DebtorDetail({ route, navigation }) {
   return (
     <View style={styles.container}>
       <TouchableOpacity onPress={() => navigation.goBack()}>
-        <Text>Back</Text>
+        <Image source={require(`../assets/back_w.png`)}></Image>
+        {/* <Text style={{ color: "#fff" }}>Back</Text> */}
       </TouchableOpacity>
       <Text style={styles.sectionTitle}>{`${name}'s`} Debts</Text>
       <View style={styles.spentCard}>
@@ -58,14 +67,32 @@ export default function DebtorDetail({ route, navigation }) {
       <ScrollView>
         {brr.map((item) => (
           <View style={styles.amts}>
-            <Text style={{ fontWeight: "600", fontSize: 30 }}>
-              ₹{item.amount}
-            </Text>
-            <View style={{ marginTop: "auto" }}>
-              <Text style={styles.subheading2}>Description: </Text>
-              <Text numberOfLines={1} style={{ fontWeight: "600" }}>
-                {item.description}
+            <View style={{ flex: 0.8 }}>
+              <Text style={{ fontWeight: "600", fontSize: 30 }}>
+                ₹{item.amount}
               </Text>
+              <View style={{ marginTop: "auto" }}>
+                <Text style={styles.subheading2}>Description: </Text>
+                <Text numberOfLines={1} style={{ fontWeight: "600" }}>
+                  {item.description}
+                </Text>
+              </View>
+            </View>
+            <View
+              style={{
+                flex: 0.2,
+                paddingRight: 20,
+                justifyContent: "center",
+                alignItems: "center",
+                flexDirection: "row",
+              }}
+            >
+              <TouchableOpacity onPress={() => deleteHandler(item)}>
+                <Image source={require(`../assets/delete.png`)}></Image>
+              </TouchableOpacity>
+              <TouchableOpacity style={{ marginLeft: 25 }}>
+                <Image source={require(`../assets/edit.png`)}></Image>
+              </TouchableOpacity>
             </View>
           </View>
         ))}
@@ -80,18 +107,20 @@ const styles = StyleSheet.create({
     height: 70,
     backgroundColor: "#000000",
     paddingTop: Platform.OS === "android" ? StatusBar.currentHeight : 0,
-    paddingLeft: 30,
-    paddingRight: 30,
+    paddingLeft: 10,
+    paddingRight: 10,
   },
   spentCard: {
     marginTop: 30,
     height: 200,
-    width: "100%",
+    width: "95%",
     backgroundColor: "#5C2E7E",
     borderRadius: 20,
     alignItems: "center",
     justifyContent: "center",
     marginBottom: 30,
+    marginLeft: "auto",
+    marginRight: "auto"
   },
   subheading: {
     color: "#EEEEEE",
@@ -116,10 +145,14 @@ const styles = StyleSheet.create({
   },
   amts: {
     height: 100,
-    width: "100%",
+    width: "95%",
     backgroundColor: "#8BBCCC",
     borderRadius: 20,
     marginBottom: 10,
     padding: 10,
+    flex: 1,
+    flexDirection: "row",
+    marginLeft: "auto",
+    marginRight: "auto"
   },
 });

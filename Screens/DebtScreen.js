@@ -45,7 +45,7 @@ export default function DebtScreen({ navigation }) {
     getDebts();
 
     // console.log(reduced, reducedArr);
-  }, []);
+  });
 
   // console.log(allDebts);
   // console.log(allDebts);
@@ -64,7 +64,8 @@ export default function DebtScreen({ navigation }) {
   return (
     <View style={styles.container}>
       <TouchableOpacity onPress={() => navigation.goBack()}>
-        <Text style={{ color: "#fff" }}>Back</Text>
+        <Image source={require(`../assets/back_w.png`)}></Image>
+        {/* <Text style={{ color: "#fff" }}>Back</Text> */}
       </TouchableOpacity>
 
       <View style={styles.tasksWrapper}>
@@ -116,6 +117,7 @@ const styles = StyleSheet.create({
     height: 70,
     backgroundColor: "#181D31",
     paddingTop: Platform.OS === "android" ? StatusBar.currentHeight : 0,
+    padding: 10
   },
   tasksWrapper: {
     flex: 1,
