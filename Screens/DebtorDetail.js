@@ -22,7 +22,12 @@ import firestore from "@react-native-firebase/firestore";
 import DebtorCard from "../components/DebtorCard";
 
 export default function DebtorDetail({ route, navigation }) {
-  const { name } = route.params;
+  let name2 = "not defined";
+  if (route.params !== undefined) {
+    const { name } = route.params;
+    name2 = name;
+  } 
+
   const { user } = useContext(MyContext);
   const [total, setTotal] = useState(0);
   const [brr, setBrr] = useState([{}]);
@@ -41,7 +46,7 @@ export default function DebtorDetail({ route, navigation }) {
       let arr = [];
       let tot = 0;
       marr.map((item) => {
-        if (item.name == name) {
+        if (item.name == name2) {
           arr.push(item);
           tot += item.amount;
         }
@@ -57,16 +62,16 @@ export default function DebtorDetail({ route, navigation }) {
         <Image source={require(`../assets/back_w.png`)}></Image>
         {/* <Text style={{ color: "#fff" }}>Back</Text> */}
       </TouchableOpacity>
-      <Text style={styles.sectionTitle}>{`${name}'s`} Debts</Text>
+      <Text style={styles.sectionTitle}>{`${name2}'s`} Debts</Text>
       <View style={styles.spentCard}>
-        <Text style={styles.subheading}>Total Amount {name} owes you</Text>
+        <Text style={styles.subheading}>Total Amount {name2} owes you</Text>
         <View>
           <Text style={styles.paisa}>₹{total}</Text>
         </View>
       </View>
       <ScrollView>
         {brr.map((item) => (
-          <View style={styles.amts}>
+          <View key={item.description} style={styles.amts}>
             <View style={{ flex: 0.8 }}>
               <Text style={{ fontWeight: "600", fontSize: 30 }}>
                 ₹{item.amount}
@@ -120,7 +125,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     marginBottom: 30,
     marginLeft: "auto",
-    marginRight: "auto"
+    marginRight: "auto",
   },
   subheading: {
     color: "#EEEEEE",
@@ -153,6 +158,6 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: "row",
     marginLeft: "auto",
-    marginRight: "auto"
+    marginRight: "auto",
   },
 });
