@@ -1,3 +1,4 @@
+import React from "react";
 import {
   StyleSheet,
   Text,
@@ -14,13 +15,16 @@ import {
   TouchableOpacity,
   TextInput,
 } from "react-native";
+// import { TouchableOpacity } from 'react-native-gesture-handler';
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import firestore from "@react-native-firebase/firestore";
 import InputCard from "../components/InputCard";
 import AmtInputCard from "../components/AmtInputCard";
 import { MyContext } from "../App";
-import React, { useContext } from "react";
+import { useContext } from "react";
+import { IconButton } from "@react-native-material/core";
+import { Icon } from 'react-native-vector-icons';
 
 export default function AddDebt({ navigation }) {
   const [Amt, onChangeAmt] = React.useState(0);
@@ -42,76 +46,70 @@ export default function AddDebt({ navigation }) {
   };
   const inputAmt = (
     <TextInput
-      style={styles.input}
+      style={{ ...styles.input, fontSize: 50,color:"#ffffff" }}
       onChangeText={onChangeAmt}
       value={Amt}
       placeholder="0.00"
       keyboardType="numeric"
+      placeholderTextColor={"#fc8991"}
     />
   );
 
   const inputName = (
     <TextInput
-      style={styles.input}
+      style={{ ...styles.input, borderWidth: 1, borderRadius: 10, paddingHorizontal: 10, borderColor: "#d3d3d9" }}
       onChangeText={onChangeName}
       value={name}
-      placeholder="Rohit"
+      placeholder="Borrower's Name"
+      placeholderTextColor="#d3d3d9"
       keyboardType="text"
     />
   );
 
   const inputDetails = (
     <TextInput
-      multiline
-      numberOfLines={4}
-      style={styles.input}
+      style={{ ...styles.input, borderWidth: 1, borderRadius: 10, paddingHorizontal: 10, borderColor: "#d3d3d9" }}
       onChangeText={onChangeDetails}
       value={details}
       placeholder="Enter Details Here..."
+      placeholderTextColor="#d3d3d9"
       keyboardType="text"
     />
   );
   return (
     <View style={styles.container}>
+      <View style={styles.back}>
+        <TouchableOpacity onPress={() => navigation.goBack()} style={{ width: 25, height: 25,}}>
+          <Image source={require(`../assets/white_left_arrow.png`)} style={{ width: 25, height: 25 }}></Image>
+          {/* <Text style={{ color: "#fff" }}>Back</Text> */}
+        </TouchableOpacity>
+      </View>
       <View style={styles.tasksWrapper}>
-        <Text style={styles.sectionTitle}>Add Debt</Text>
-        {/* <View>
-          <Text>Enter the Amount: </Text>
-          <TextInput
-            style={styles.input}
-            onChangeText={onChangeNumber}
-            value={number}
-            placeholder="0.00"
-            keyboardType="numeric"
-          />
-        </View> */}
-        <InputCard
-          name="Borrower's Name: "
-          content={inputName}
-          type={1}
-        ></InputCard>
-        <AmtInputCard
-          name="Enter the Amount: "
-          content={inputAmt}
-          extraContent={<Text>Rs. </Text>}
-        ></AmtInputCard>
-        <InputCard name="Details: " content={inputDetails} type={2}></InputCard>
-        <View
-          style={{
-            flexDirection: "row",
-            justifyContent: "space-evenly",
-            alignItems: "center",
-          }}
-        >
-          <View style={styles.addButton}>
-            <TouchableOpacity onPress={handleSubmit}>
-              <Text style={{ fontWeight: "bold", color: "black" }}>Submit</Text>
-            </TouchableOpacity>
+        <View style={{ flex: 1, }}>
+          <View style={{ flex: 1, }}><Text style={styles.sectionTitle}>Debt</Text></View>
+          <View>
+            <View>
+              <Text style={styles.howMuch}>How much?</Text>
+            </View>
+            <View style={styles.inputDebt}>
+              <Text style={{ fontSize: 50,color:"#ffffff", }}>Rs.</Text>
+              <View>{inputAmt}</View>
+            </View>
           </View>
-          <View style={styles.addButton}>
-            <TouchableOpacity onPress={() => navigation.goBack()}>
-              <Text style={{ fontWeight: "bold", color: "black" }}>Exit</Text>
-            </TouchableOpacity>
+        </View>
+        <View style={styles.WhiteCont}>
+          <View>
+            {/* <View><Text style={styles.inputTitle}>Borrower's Name :</Text></View> */}
+            <View style={styles.inputPlace}>{inputName}</View>
+            {/* <View><Text style={styles.inputTitle}>Details :</Text></View> */}
+            <View style={styles.inputPlace}>{inputDetails}</View>
+          </View>
+          <View style={styles.submit}>
+            <View style={styles.addButton}>
+              <TouchableOpacity onPress={handleSubmit}>
+                <Text style={{ fontWeight: "bold", color: "#ffffff" }}>Submit</Text>
+              </TouchableOpacity>
+            </View>
           </View>
         </View>
       </View>
@@ -120,43 +118,83 @@ export default function AddDebt({ navigation }) {
 }
 
 const styles = StyleSheet.create({
+  back:{
+    position:"absolute",
+    top:30,
+    left:10,
+    zIndex: 1,
+  },
   container: {
     flex: 1,
     height: 70,
-    backgroundColor: "#181D31",
+    backgroundColor: "#fd3c4a",
     paddingTop: Platform.OS === "android" ? StatusBar.currentHeight : 0,
+  },
+  WhiteCont: {
+    backgroundColor: "white",
+    borderTopLeftRadius: 20,
+    borderTopRightRadius: 20,
+    width: "100%",
+    bottom: 0,
+    paddingVertical: 20,
+    paddingHorizontal: 20,
+    height: "60%",
+    // justifyContent: "space-between"
   },
   tasksWrapper: {
     flex: 1,
-    alignItems: "center",
-    // justifyContent: "center",
     height: "70%",
-    paddingHorizontal: 10,
-    paddingTop: 100,
   },
   sectionTitle: {
-    color: "#88CAC4",
+    // flex: 1,
+    color: "white",
     fontWeight: "bold",
-    fontSize: 35,
-    marginBottom: 30,
+    fontSize: 25,
+    // width:"70%",
+    textAlign: "center"
+  },
+  inputDebt: {
+    flexDirection: "row",
+    paddingLeft: 10,
+    alignItems: "center",
+    color:"#ffffff",
   },
   cardContainer: {
     height: 200,
   },
   addButton: {
     // elevation: 100,
-    marginTop: 40,
+    // marginTop: 40,
     marginHorizontal: 30,
     borderRadius: 10,
     paddingVertical: 10,
     height: 40,
-    width: 100,
+    width: "100%",
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: "#D6E4E5",
+    backgroundColor: "#7f3dff",
+    color:"#ffffff"
   },
   input: {
     justifyContent: "center",
     alignItems: "center",
+    fontSize: 20,
+    padding:5,
   },
+  howMuch: {
+    color: "#e9e7e6",
+    paddingLeft: 10,
+    fontSize: 25,
+  },
+  inputPlace: {
+    color: "#8f9ca2",
+    fontSize: 22,
+    paddingBottom: 3,
+    paddingTop: 20,
+  },
+  submit: {
+    height: "40%",
+    alignItems: "center",
+    justifyContent: "center",
+  }
 });
