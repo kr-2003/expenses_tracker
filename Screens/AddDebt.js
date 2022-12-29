@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import {
   StyleSheet,
   Text,
@@ -22,15 +22,18 @@ import firestore from "@react-native-firebase/firestore";
 import InputCard from "../components/InputCard";
 import AmtInputCard from "../components/AmtInputCard";
 import { MyContext } from "../App";
-import { useContext } from "react";
-import { IconButton } from "@react-native-material/core";
-import { Icon } from 'react-native-vector-icons';
+import { useContext, useState } from "react";
+import { set } from "react-native-reanimated";
+// import { IconButton } from "@react-native-material/core";
+// import { Icon } from 'react-native-vector-icons';
 
 export default function AddDebt({ navigation }) {
   const [Amt, onChangeAmt] = React.useState(0);
   const [name, onChangeName] = React.useState(null);
   const [details, onChangeDetails] = React.useState(null);
+  const [contact, setContact] = useState("");
   const { user } = useContext(MyContext);
+  const [contacts, setContacts] = useState([{}]);
   const handleSubmit = async () => {
     await firestore()
       .collection("debts")
@@ -42,11 +45,34 @@ export default function AddDebt({ navigation }) {
           description: details,
         }),
       });
+    await firestore()
+      .collection("debts")
+      .doc(user.uid)
+      .update({
+        contacts: firestore.FieldValue.arrayUnion({
+          name: name.toLowerCase(),
+          phone: contact,
+        }),
+      });
     navigation.goBack();
   };
+  useEffect(() => {
+    const cont = async () => {
+      const data = await firestore().collection("debts").doc(user.uid).get();
+      setContacts(data._data.contacts);
+    };
+    cont();
+    // console.log(contacts);
+  }, []);
+  useEffect(() => {
+    const c = contacts.filter((e) => e.name === name.toLowerCase());
+    if (c.length > 0) {
+      setContact(c[0].phone);
+    } else setContact("");
+  }, [name]);
   const inputAmt = (
     <TextInput
-      style={{ ...styles.input, fontSize: 50,color:"#ffffff" }}
+      style={{ ...styles.input, fontSize: 50, color: "#ffffff" }}
       onChangeText={onChangeAmt}
       value={Amt}
       placeholder="0.00"
@@ -57,7 +83,13 @@ export default function AddDebt({ navigation }) {
 
   const inputName = (
     <TextInput
-      style={{ ...styles.input, borderWidth: 1, borderRadius: 10, paddingHorizontal: 10, borderColor: "#d3d3d9" }}
+      style={{
+        ...styles.input,
+        borderWidth: 1,
+        borderRadius: 10,
+        paddingHorizontal: 10,
+        borderColor: "#d3d3d9",
+      }}
       onChangeText={onChangeName}
       value={name}
       placeholder="Borrower's Name"
@@ -68,7 +100,13 @@ export default function AddDebt({ navigation }) {
 
   const inputDetails = (
     <TextInput
-      style={{ ...styles.input, borderWidth: 1, borderRadius: 10, paddingHorizontal: 10, borderColor: "#d3d3d9" }}
+      style={{
+        ...styles.input,
+        borderWidth: 1,
+        borderRadius: 10,
+        paddingHorizontal: 10,
+        borderColor: "#d3d3d9",
+      }}
       onChangeText={onChangeDetails}
       value={details}
       placeholder="Enter Details Here..."
@@ -76,23 +114,47 @@ export default function AddDebt({ navigation }) {
       keyboardType="text"
     />
   );
+  const inputContacts = (
+    <TextInput
+      style={{
+        ...styles.input,
+        borderWidth: 1,
+        borderRadius: 10,
+        paddingHorizontal: 10,
+        borderColor: "#d3d3d9",
+      }}
+      onChangeText={(text) => setContact(text)}
+      value={contact}
+      placeholder="Enter Contact Here..."
+      placeholderTextColor="#d3d3d9"
+      keyboardType="text"
+    />
+  );
   return (
     <View style={styles.container}>
       <View style={styles.back}>
-        <TouchableOpacity onPress={() => navigation.goBack()} style={{ width: 25, height: 25,}}>
-          <Image source={require(`../assets/white_left_arrow.png`)} style={{ width: 25, height: 25 }}></Image>
+        <TouchableOpacity
+          onPress={() => navigation.goBack()}
+          style={{ width: 25, height: 25 }}
+        >
+          <Image
+            source={require(`../assets/white_left_arrow.png`)}
+            style={{ width: 25, height: 25 }}
+          ></Image>
           {/* <Text style={{ color: "#fff" }}>Back</Text> */}
         </TouchableOpacity>
       </View>
       <View style={styles.tasksWrapper}>
-        <View style={{ flex: 1, }}>
-          <View style={{ flex: 1, }}><Text style={styles.sectionTitle}>Debt</Text></View>
+        <View style={{ flex: 1 }}>
+          <View style={{ flex: 1 }}>
+            <Text style={styles.sectionTitle}>Debt</Text>
+          </View>
           <View>
             <View>
               <Text style={styles.howMuch}>How much?</Text>
             </View>
             <View style={styles.inputDebt}>
-              <Text style={{ fontSize: 50,color:"#ffffff", }}>Rs.</Text>
+              <Text style={{ fontSize: 50, color: "#ffffff" }}>Rs.</Text>
               <View>{inputAmt}</View>
             </View>
           </View>
@@ -102,12 +164,16 @@ export default function AddDebt({ navigation }) {
             {/* <View><Text style={styles.inputTitle}>Borrower's Name :</Text></View> */}
             <View style={styles.inputPlace}>{inputName}</View>
             {/* <View><Text style={styles.inputTitle}>Details :</Text></View> */}
+            <View style={styles.inputPlace}>{inputContacts}</View>
+
             <View style={styles.inputPlace}>{inputDetails}</View>
           </View>
           <View style={styles.submit}>
             <View style={styles.addButton}>
               <TouchableOpacity onPress={handleSubmit}>
-                <Text style={{ fontWeight: "bold", color: "#ffffff" }}>Submit</Text>
+                <Text style={{ fontWeight: "bold", color: "#ffffff" }}>
+                  Submit
+                </Text>
               </TouchableOpacity>
             </View>
           </View>
@@ -118,10 +184,10 @@ export default function AddDebt({ navigation }) {
 }
 
 const styles = StyleSheet.create({
-  back:{
-    position:"absolute",
-    top:30,
-    left:10,
+  back: {
+    position: "absolute",
+    top: 30,
+    left: 10,
     zIndex: 1,
   },
   container: {
@@ -151,13 +217,13 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     fontSize: 25,
     // width:"70%",
-    textAlign: "center"
+    textAlign: "center",
   },
   inputDebt: {
     flexDirection: "row",
     paddingLeft: 10,
     alignItems: "center",
-    color:"#ffffff",
+    color: "#ffffff",
   },
   cardContainer: {
     height: 200,
@@ -173,13 +239,13 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     backgroundColor: "#7f3dff",
-    color:"#ffffff"
+    color: "#ffffff",
   },
   input: {
     justifyContent: "center",
     alignItems: "center",
     fontSize: 20,
-    padding:5,
+    padding: 5,
   },
   howMuch: {
     color: "#e9e7e6",
@@ -196,5 +262,5 @@ const styles = StyleSheet.create({
     height: "40%",
     alignItems: "center",
     justifyContent: "center",
-  }
+  },
 });

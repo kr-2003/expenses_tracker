@@ -24,9 +24,9 @@ import DebtorCard from "../components/DebtorCard";
 import { MyContext } from "../App";
 import firestore from "@react-native-firebase/firestore";
 
-auth()
-  .signOut()
-  .then(() => console.log("User signed out!"));
+// auth()
+//   .signOut()
+//   .then(() => console.log("User signed out!"));
 export default function Dashboard({ navigation }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
