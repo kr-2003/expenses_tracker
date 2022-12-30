@@ -142,7 +142,7 @@ export default function IncomeScreen({ navigation }) {
       </View>
       <TouchableOpacity
         style={styles.loginBtn}
-        onPress={() => navigation.navigate("AddDebt")}
+        onPress={() => navigation.navigate("AddIncome")}
       >
         <Text style={styles.loginText}>+ Add</Text>
       </TouchableOpacity>
