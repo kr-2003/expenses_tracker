@@ -13,7 +13,7 @@ import {
   ScrollView,
   TouchableOpacity,
   TextInput,
-  ImageBackground
+  ImageBackground,
 } from "react-native";
 import React, { useState, useContext, useEffect } from "react";
 
@@ -35,6 +35,8 @@ export default function Dashboard({ navigation }) {
   const [many, setMany] = useState([]);
   const [lent, setLent] = useState(0);
   const [allDebts, setAllDebts] = useState([]);
+  const [income, setIncome] = useState(0);
+  const [allIncomes, setAllIncomes] = useState([]);
   // console.log(userDocument);
   useEffect(() => {
     const getUserDetails = async () => {
@@ -55,9 +57,20 @@ export default function Dashboard({ navigation }) {
       setAllDebts(arr);
     };
     getDebts();
-
-    // console.log(reduced, reducedArr);
   }, [allDebts]);
+  useEffect(() => {
+    const getIncomes = async () => {
+      const data = await firestore().collection("income").doc(user.uid).get();
+      let arr = data._data.allIncomes;
+      let inctot = 0;
+      arr.map((obj) => {
+        inctot += obj.amount;
+      });
+      setIncome(inctot);
+      setAllIncomes(arr);
+    };
+    getIncomes();
+  }, [allIncomes]);
   // const search = async () => {
   //   await firestore()
   //     .collection("users")
@@ -99,7 +112,10 @@ export default function Dashboard({ navigation }) {
         >
           ₹50000
         </Text>
-        <View style={styles.income}>
+        <TouchableOpacity
+          onPress={() => navigation.navigate("Income")}
+          style={styles.income}
+        >
           <Text
             style={{
               color: "#fff",
@@ -118,9 +134,9 @@ export default function Dashboard({ navigation }) {
               fontSize: 30,
             }}
           >
-            ₹100000
+            ₹{income}
           </Text>
-        </View>
+        </TouchableOpacity>
         <View style={styles.expenses}>
           <Text
             style={{

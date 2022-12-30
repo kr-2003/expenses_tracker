@@ -26,7 +26,7 @@ export default function DebtorDetail({ route, navigation }) {
   if (route.params !== undefined) {
     const { name } = route.params;
     name2 = name;
-  } 
+  }
 
   const { user } = useContext(MyContext);
   const [total, setTotal] = useState(0);
@@ -71,35 +71,37 @@ export default function DebtorDetail({ route, navigation }) {
       </View>
       <ScrollView>
         {brr.map((item) => (
-          <View key={item.description} style={styles.amts}>
-            <View style={{ flex: 0.8 }}>
-              <Text style={{ fontWeight: "600", fontSize: 30 }}>
-                ₹{item.amount}
-              </Text>
-              <View style={{ marginTop: "auto" }}>
-                <Text style={styles.subheading2}>Description: </Text>
-                <Text numberOfLines={1} style={{ fontWeight: "600" }}>
-                  {item.description}
+          <TouchableOpacity key={Math.random()} onPress={()=>navigation.navigate("TransactionDetails", {type: "Lent", transaction: item})}>
+            <View style={styles.amts}>
+              <View style={{ flex: 0.8 }}>
+                <Text style={{ fontWeight: "600", fontSize: 30 }}>
+                  ₹{item.amount}
                 </Text>
+                <View style={{ marginTop: "auto" }}>
+                  <Text style={styles.subheading2}>Description: </Text>
+                  <Text numberOfLines={1} style={{ fontWeight: "600" }}>
+                    {item.description}
+                  </Text>
+                </View>
+              </View>
+              <View
+                style={{
+                  flex: 0.2,
+                  paddingRight: 20,
+                  justifyContent: "center",
+                  alignItems: "center",
+                  flexDirection: "row",
+                }}
+              >
+                {/* <TouchableOpacity onPress={() => deleteHandler(item)}>
+                  <Image source={require(`../assets/delete.png`)}></Image>
+                </TouchableOpacity>
+                <TouchableOpacity style={{ marginLeft: 25 }}>
+                  <Image source={require(`../assets/edit.png`)}></Image>
+                </TouchableOpacity> */}
               </View>
             </View>
-            <View
-              style={{
-                flex: 0.2,
-                paddingRight: 20,
-                justifyContent: "center",
-                alignItems: "center",
-                flexDirection: "row",
-              }}
-            >
-              <TouchableOpacity onPress={() => deleteHandler(item)}>
-                <Image source={require(`../assets/delete.png`)}></Image>
-              </TouchableOpacity>
-              <TouchableOpacity style={{ marginLeft: 25 }}>
-                <Image source={require(`../assets/edit.png`)}></Image>
-              </TouchableOpacity>
-            </View>
-          </View>
+          </TouchableOpacity>
         ))}
       </ScrollView>
     </View>

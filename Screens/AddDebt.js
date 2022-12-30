@@ -29,7 +29,7 @@ import { set } from "react-native-reanimated";
 
 export default function AddDebt({ navigation }) {
   const [Amt, onChangeAmt] = React.useState(0);
-  const [name, onChangeName] = React.useState(null);
+  const [name, onChangeName] = React.useState("");
   const [details, onChangeDetails] = React.useState(null);
   const [contact, setContact] = useState("");
   const { user } = useContext(MyContext);

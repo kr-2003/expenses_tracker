@@ -60,6 +60,7 @@ const styles = StyleSheet.create({
   moneyWrapper: {
     flex: 1,
     height: 90,
+    paddingRight: 16
   },
   nameWrapper: {
     flex: 3,

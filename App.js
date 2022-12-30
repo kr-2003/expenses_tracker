@@ -23,20 +23,34 @@ import Register from "./Screens/Register";
 import AddDebt from "./Screens/AddDebt";
 import Dashboard from "./Screens/Dashboard";
 import DebtorDetail from "./Screens/DebtorDetail";
+import IncomeScreen from "./Screens/IncomeScreen";
+import IncomeDetail from "./Screens/IncomeDetail";
+import TransactionDetails from "./Screens/TransactionDetails";
 import auth from "@react-native-firebase/auth";
 import React, { useEffect, useState, createContext } from "react";
-
+import firestore from "@react-native-firebase/firestore";
 const Stack = createNativeStackNavigator();
 const MyContext = React.createContext(null);
 export { MyContext };
 export default function App() {
   const [initializing, setInitializing] = useState(true);
   const [user, setUser] = useState();
+  const [username, setUsername] = useState("");
   const onAuthStateChanged = (user) => {
     setUser(user);
     console.log(user);
     if (initializing) setInitializing(false);
   };
+  useEffect(() => {
+    const getUserDetails = async () => {
+      if (user!==undefined) {
+        const data = await firestore().collection("users").doc(user.uid).get();
+        setUsername(data._data.username);
+        console.log(username);
+      }
+    };
+    getUserDetails();
+  }, [user]);
   useEffect(() => {
     const subscriber = auth().onAuthStateChanged(onAuthStateChanged);
     return subscriber; // unsubscribe on unmount
@@ -66,7 +80,7 @@ export default function App() {
     );
   }
   return (
-    <MyContext.Provider value={{ user }}>
+    <MyContext.Provider value={{ user, username }}>
       <NavigationContainer>
         <Stack.Navigator>
           <Stack.Screen
@@ -93,6 +107,21 @@ export default function App() {
             options={{ headerShown: false }}
             name="DebtorDetail"
             component={DebtorDetail}
+          />
+          <Stack.Screen
+            options={{ headerShown: false }}
+            name="IncomeDetail"
+            component={IncomeDetail}
+          />
+          <Stack.Screen
+            options={{ headerShown: false }}
+            name="Income"
+            component={IncomeScreen}
+          />
+          <Stack.Screen
+            options={{ headerShown: false }}
+            name="TransactionDetails"
+            component={TransactionDetails}
           />
         </Stack.Navigator>
       </NavigationContainer>
