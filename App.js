@@ -21,6 +21,7 @@ import DebtorCard from "./components/DebtorCard";
 import Login from "./Screens/Login";
 import Register from "./Screens/Register";
 import AddDebt from "./Screens/AddDebt";
+import AddIncome from "./Screens/AddIncome";
 import Dashboard from "./Screens/Dashboard";
 import DebtorDetail from "./Screens/DebtorDetail";
 import IncomeScreen from "./Screens/IncomeScreen";
@@ -107,6 +108,11 @@ export default function App() {
             options={{ headerShown: false }}
             name="DebtorDetail"
             component={DebtorDetail}
+          />
+          <Stack.Screen
+            options={{ headerShown: false }}
+            name="AddIncome"
+            component={AddIncome}
           />
           <Stack.Screen
             options={{ headerShown: false }}
