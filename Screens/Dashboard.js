@@ -37,6 +37,11 @@ export default function Dashboard({ navigation }) {
   const [allDebts, setAllDebts] = useState([]);
   const [income, setIncome] = useState(0);
   const [allIncomes, setAllIncomes] = useState([]);
+  const [expense, setExpense] = useState(0);
+  const [allExpenses, setAllExpenses] = useState([]);
+  const [borrow, setBorrow] = useState(0);
+  const [allBorrows, setAllBorrows] = useState([]);
+
   // console.log(userDocument);
   useEffect(() => {
     const getUserDetails = async () => {
@@ -71,6 +76,32 @@ export default function Dashboard({ navigation }) {
     };
     getIncomes();
   }, [allIncomes]);
+  useEffect(() => {
+    const getExpenses = async () => {
+      const data = await firestore().collection("expense").doc(user.uid).get();
+      let arr = data._data.allExpenses;
+      let tot = 0;
+      arr.map((obj) => {
+        tot += obj.amount;
+      });
+      setExpense(tot);
+      setAllExpenses(arr);
+    };
+    getExpenses();
+  }, [allExpenses]);
+  useEffect(() => {
+    const getExpenses = async () => {
+      const data = await firestore().collection("credits").doc(user.uid).get();
+      let arr = data._data.allCredits;
+      let tot = 0;
+      arr.map((obj) => {
+        tot += obj.amount;
+      });
+      setBorrow(tot);
+      setAllBorrows(arr);
+    };
+    getExpenses();
+  }, [allBorrows]);
   // const search = async () => {
   //   await firestore()
   //     .collection("users")
@@ -110,7 +141,7 @@ export default function Dashboard({ navigation }) {
             color: "#161719",
           }}
         >
-          ₹50000
+          ₹{income - expense}
         </Text>
         <TouchableOpacity
           onPress={() => navigation.navigate("Income")}
@@ -137,7 +168,10 @@ export default function Dashboard({ navigation }) {
             ₹{income}
           </Text>
         </TouchableOpacity>
-        <View style={styles.expenses}>
+        <TouchableOpacity
+          onPress={() => navigation.navigate("ExpenseScreen")}
+          style={styles.expenses}
+        >
           <Text
             style={{
               color: "#fff",
@@ -156,9 +190,9 @@ export default function Dashboard({ navigation }) {
               fontSize: 30,
             }}
           >
-            ₹50000
+            ₹{expense}
           </Text>
-        </View>
+        </TouchableOpacity>
         <View style={styles.options}>
           <TouchableOpacity
             style={styles.moneyLent}
@@ -185,7 +219,10 @@ export default function Dashboard({ navigation }) {
               ₹{lent}
             </Text>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.moneyBorrowed}>
+          <TouchableOpacity
+            onPress={() => navigation.navigate("BorrowScreen")}
+            style={styles.moneyBorrowed}
+          >
             <Text
               style={{
                 color: "#7F3DFF",
@@ -204,7 +241,7 @@ export default function Dashboard({ navigation }) {
                 fontSize: 30,
               }}
             >
-              ₹10
+              ₹{borrow}
             </Text>
           </TouchableOpacity>
           <Text style={styles.transaction}>Recent Transcations</Text>
