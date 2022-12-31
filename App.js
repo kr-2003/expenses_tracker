@@ -27,9 +27,15 @@ import DebtorDetail from "./Screens/DebtorDetail";
 import IncomeScreen from "./Screens/IncomeScreen";
 import IncomeDetail from "./Screens/IncomeDetail";
 import TransactionDetails from "./Screens/TransactionDetails";
+import ExpenseScreen from "./Screens/ExpenseScreen";
 import auth from "@react-native-firebase/auth";
 import React, { useEffect, useState, createContext } from "react";
 import firestore from "@react-native-firebase/firestore";
+import EditTransactions from "./Screens/EditTransactions";
+import BorrowScreen from "./Screens/BorrowScreen";
+import AddExpense from "./Screens/AddExpense";
+import BorrowDetails from "./Screens/BorrowDetails";
+import AddBorrow from "./Screens/AddBorrow";
 const Stack = createNativeStackNavigator();
 const MyContext = React.createContext(null);
 export { MyContext };
@@ -44,7 +50,7 @@ export default function App() {
   };
   useEffect(() => {
     const getUserDetails = async () => {
-      if (user!==undefined) {
+      if (user !== undefined) {
         const data = await firestore().collection("users").doc(user.uid).get();
         setUsername(data._data.username);
         console.log(username);
@@ -128,6 +134,36 @@ export default function App() {
             options={{ headerShown: false }}
             name="TransactionDetails"
             component={TransactionDetails}
+          />
+          <Stack.Screen
+            options={{ headerShown: false }}
+            name="EditTransactions"
+            component={EditTransactions}
+          />
+          <Stack.Screen
+            options={{ headerShown: false }}
+            name="ExpenseScreen"
+            component={ExpenseScreen}
+          />
+          <Stack.Screen
+            options={{ headerShown: false }}
+            name="AddExpense"
+            component={AddExpense}
+          />
+          <Stack.Screen
+            options={{ headerShown: false }}
+            name="BorrowScreen"
+            component={BorrowScreen}
+          />
+          <Stack.Screen
+            options={{ headerShown: false }}
+            name="BorrowDetails"
+            component={BorrowDetails}
+          />
+          <Stack.Screen
+            options={{ headerShown: false }}
+            name="AddBorrow"
+            component={AddBorrow}
           />
         </Stack.Navigator>
       </NavigationContainer>

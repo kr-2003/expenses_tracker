@@ -19,8 +19,45 @@ import firestore from "@react-native-firebase/firestore";
 import { MyContext } from "../App";
 
 export default function TransactionDetails({ navigation, route }) {
+  const { user } = useContext(MyContext);
   const { transaction, type } = route.params;
   const { username } = useContext(MyContext);
+  const deleteTransaction = async () => {
+    console.log("delete");
+    if (type == "Income") {
+      await firestore()
+        .collection("income")
+        .doc(user.uid)
+        .update({
+          allIncomes: firestore.FieldValue.arrayRemove(transaction),
+        });
+    }
+    if (type == "Expense") {
+      await firestore()
+        .collection("expense")
+        .doc(user.uid)
+        .update({
+          allExpenses: firestore.FieldValue.arrayRemove(transaction),
+        });
+    }
+    if (type == "Lent") {
+      await firestore()
+        .collection("debts")
+        .doc(user.uid)
+        .update({
+          allDebts: firestore.FieldValue.arrayRemove(transaction),
+        });
+    }
+    if (type == "Borrowed") {
+      await firestore()
+        .collection("credits")
+        .doc(user.uid)
+        .update({
+          allCredits: firestore.FieldValue.arrayRemove(transaction),
+        });
+    }
+    navigation.goBack();
+  };
   let containerStyle;
   if (type == "Income") containerStyle = styles.greenContainer;
   if (type == "Expense") containerStyle = styles.redContainer;
@@ -35,6 +72,17 @@ export default function TransactionDetails({ navigation, route }) {
         >
           <Image source={require(`../assets/Vector.png`)}></Image>
           {/* <Text style={{ color: "#fff" }}>Back</Text> */}
+        </TouchableOpacity>
+        <TouchableOpacity style={{ zIndex: 999 }} onPress={deleteTransaction}>
+          <Text
+            style={{
+              position: "absolute",
+              right: 16,
+              top: 16,
+            }}
+          >
+            Delete
+          </Text>
         </TouchableOpacity>
         <Text style={styles.headerText}>Detail Transaction</Text>
         <Text style={styles.amount}>₹{transaction.amount}</Text>
@@ -68,7 +116,7 @@ export default function TransactionDetails({ navigation, route }) {
           {type == "Borrowed" && (
             <>
               <Text style={{ textAlign: "center", color: "#91919F" }}>
-                Title
+                From
               </Text>
               <Text
                 style={{ textAlign: "center", fontSize: 20, fontWeight: "600" }}
@@ -107,9 +155,7 @@ export default function TransactionDetails({ navigation, route }) {
         >
           {type == "Lent" && (
             <>
-              <Text style={{ textAlign: "center", color: "#91919F" }}>
-                To
-              </Text>
+              <Text style={{ textAlign: "center", color: "#91919F" }}>To</Text>
               <Text
                 style={{ textAlign: "center", fontSize: 20, fontWeight: "600" }}
               >
@@ -119,9 +165,7 @@ export default function TransactionDetails({ navigation, route }) {
           )}
           {type == "Borrowed" && (
             <>
-              <Text style={{ textAlign: "center", color: "#91919F" }}>
-                To
-              </Text>
+              <Text style={{ textAlign: "center", color: "#91919F" }}>To</Text>
               <Text
                 style={{ textAlign: "center", fontSize: 20, fontWeight: "600" }}
               >
@@ -165,7 +209,12 @@ export default function TransactionDetails({ navigation, route }) {
       </View>
       <TouchableOpacity
         style={styles.loginBtn}
-        onPress={() => navigation.navigate("AddDebt")}
+        onPress={() =>
+          navigation.navigate("EditTransactions", {
+            transaction: transaction,
+            type: type,
+          })
+        }
       >
         <Text style={styles.loginText}>Edit</Text>
       </TouchableOpacity>
