@@ -38,7 +38,7 @@ export default function AddIncome({ navigation }) {
       value={Amt}
       placeholder="0.00"
       keyboardType="numeric"
-      placeholderTextColor={"#fc8991"}
+      placeholderTextColor={"#87d5b9"}
     />
   );
 

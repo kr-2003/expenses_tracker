@@ -18,6 +18,7 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import Home from "./Screens/Home";
 import DebtScreen from "./Screens/DebtScreen";
 import DebtorCard from "./components/DebtorCard";
+import Profile from "./Screens/Profile";
 import Login from "./Screens/Login";
 import Register from "./Screens/Register";
 import AddDebt from "./Screens/AddDebt";
@@ -94,6 +95,11 @@ export default function App() {
             options={{ headerShown: false }}
             name="Dashboard"
             component={Dashboard}
+          />
+          <Stack.Screen
+            options={{ headerShown: false }}
+            name="Profile"
+            component={Profile}
           />
           <Stack.Screen
             options={{ headerShown: false }}

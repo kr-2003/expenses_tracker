@@ -116,7 +116,11 @@ export default function Dashboard({ navigation }) {
   return (
     <>
       <View style={styles.container}>
-        <View style={styles.profile}></View>
+        {/* <View style={styles.profile}></View> */}
+        <TouchableOpacity
+          onPress={() => navigation.navigate("Profile")}
+          style={styles.profile}
+        ></TouchableOpacity>
         <Text
           style={{
             width: "100%",
